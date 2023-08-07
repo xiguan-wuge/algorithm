@@ -2,6 +2,7 @@
 // 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a ，b ，c ，
 // 使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
 
+
 // 注意： 答案中不可以包含重复的三元组。
 
 // 示例：
@@ -137,7 +138,60 @@ function threeSum2(nums) {
   return res
 }
 
-const nums = [-1, 0, 1, 2, -1, -4]
+function threeSum3(nums) {
+  let res = []
+
+  const len = nums.length
+  let first , second, third, sum
+  // 先排序
+  nums = nums.sort((a, b) => a - b)
+  for(let i = 0; i < len - 2; i++) {
+    first = nums[i]
+    if(first > 0) break // 边界情况处理，当first都大于0，后面的一定大于0 =》和大于0， 终止遍历
+    // 去重,跳过重复项
+    if(i > 0 && nums[i] === nums[i - 1]) {
+      continue
+    }
+    second = i + 1
+    third = len - 1
+    while(second < third) {
+      sum = first + nums[second] + nums[third]
+      if( sum < 0) {
+        second++
+        // 处理重复值情况
+        // 和后一项对比
+        while(second < third && nums[second] === nums[second - 1]) {
+          second++
+        }
+      } else if(sum > 0) {
+        third--
+        // 处理重复值情况
+        // 和前一项对比
+        // 因为third先自减，所以 开始是前一项和当前项比较，所以是 third === third+1
+        while(second < third && nums[third] === nums[third + 1]) {
+          third--
+        }
+      } else {
+        res.push([first, nums[second], nums[third]])
+        second++
+        third--
+
+        // 仍旧需要处理重复情况
+        while(second < third && nums[second] === nums[second - 1]) {
+          second++
+        }
+        while(second < third && nums[third] === nums[third + 1]) {
+          third--
+        }
+      }
+    }
+  } 
+  return res
+}
+// O(nlogn)
+// S(1)
+
+const nums = [-1,0,1,2,-1,-4]
 // res = [ [ -1, 1, 0 ], [ -1, 2, -1 ] ]
-const res = threeSum(nums)
+const res = threeSum2(nums)
 console.log('res',res)

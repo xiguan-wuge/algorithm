@@ -117,8 +117,32 @@ function deleteDuplicates3(head) {
   }
   return dummy.next
 }
+
+function deleteDuplicates4(head) {
+  if(!head || !head.next) return head
+  const dummy = {val: null, next: head}
+
+  let cur = dummy, repeatVal
+  
+  while(cur.next && cur.next.next) {
+    if(cur.next.val === cur.next.next.val) {
+      repeatVal = cur.next.val
+      cur.next = cur.next.next
+      while(cur.next && cur.next.val === repeatVal) {
+        cur.next = cur.next.next
+      }
+    } else {
+      cur = cur.next
+    }
+  }
+
+  return dummy.next
+}
 // 时间复杂度: O(n) = n
-console.log('删除所有的重复节点：\n', JSON.stringify(list), '\n', deleteDuplicates3(list))
+console.log(
+  '删除所有的重复节点：\n', 
+  '原链表：',JSON.stringify(list), '\n', 
+  '结果链表：', deleteDuplicates4(list))
 
 
 // 快慢指针——删除链表的倒数第 N 个结点

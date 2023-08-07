@@ -86,7 +86,6 @@ function validPalindrome2(str) {
   }
   return false
 }
-console.log('1111111');
 console.log(validPalindrome2('abac'))
 
 
@@ -212,7 +211,26 @@ function myAtoi(str) {
 
   return targetNum
 }
-console.log('字符串转数字：', myAtoi('   +100.123qwqe122'))
+
+function myAtoi2(str) {
+  const regx = /\s*([-/+]?[0-9]*).*/
+  const max = Math.pow(2, 31) -1
+  const min = -max - 1
+
+  const groups = str.match(regx)
+  if(groups) {
+    const targetNum = +groups[1] // 隐式转换成number
+    if(isNaN(targetNum)) return 0
+
+    if(targetNum > max) return max
+    if(targetNum < min) return min
+
+    return targetNum
+  }
+
+  return 0
+}
+console.log('字符串转数字：', myAtoi2('   +100.123qwqe122'))
 
 
 

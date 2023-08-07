@@ -50,6 +50,29 @@ function mergeTwoList2(l1, l2) {
   return head.next
 }
 
+function mergeTwoList3(l1, l2) {
+  // 定义目标节点
+  const head = {}
+  let cur = head
+  // 取两个链表节点中的较小值
+  while(l1 && l2) {
+    if(l1.val <= l2.val) {
+      cur.next = l1
+      l1 = l1.next // l1遍历后移
+    } else {
+      cur.next = l2
+      l2 = l2.next
+    }
+    // 关键位置，组成新的链表
+    cur = cur.next
+  }
+
+  // 处理链表长度不同的情况
+  cur.next = l1 == null ? l2: l1
+  
+  return head.next
+}
+
 // 验证：
 const list1 = {
   val: 1,
@@ -72,4 +95,4 @@ const list2 = {
   }
 }
 
-console.log(JSON.stringify(mergeTwoList2(list1, list2)))
+console.log(JSON.stringify(mergeTwoList3(list1, list2)))

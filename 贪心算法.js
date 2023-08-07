@@ -9,6 +9,8 @@
 //   - 动态规划则会保留之前的运算结果，并能根据之前的结果进行选择，有回退功能；
 //   - 贪心是动态规划理想化的情况（即无需回退，每个子问题都最优）
 
+// 算法问题，难在：如何将题目意思理解，并转换成对应的算法思路？
+
 // 122. 买卖股票的最佳时机 II（medium）
 // 动态规划方案：
 function maxProfit(prices) {
@@ -77,7 +79,82 @@ function maxProfit3(prices) {
   }
   return res
 }
-const prices = [7,1,5,3,6,4]
+// const prices = [7,1,5,3,6,4]
 // const prices = [1,2,3,4,5]
 // const prices = [7,6,4,3,1]
-console.log('买卖股票的最佳时机', maxProfit3(prices));
+// console.log('买卖股票的最佳时机', maxProfit3(prices));
+
+
+// 455. 分发饼干 (easy)
+// https://leetcode.cn/problems/assign-cookies/
+
+// 思路：
+//  贪心算法：
+//  - 一个饼干只能给一个孩子，大尺寸饼干即可以满足胃口大的孩子，也能满足胃口大的孩子，优先满足胃口小的孩子；
+//  - 2个数组由小到大排序，然后从右到左遍历，用大饼干优先满足胃口大的孩子
+
+//  时间O(mlogm + nlogn) 排序的复杂度 +
+//  空间S(logm + logn) 排序的额外开销
+
+function findContentChildren(g, s) {
+  // 排序： 小 -》 大
+  g = g.sort((a, b) => a - b)
+  s = s.sort((a, b) => a - b)
+
+  let result = 0
+  let sIndex = s.length - 1
+  let gLen = g.length - 1
+  for(let i = gLen; i >= 0; i--) {
+    // 先满足胃口大的孩子
+    if(sIndex >= 0 && s[sIndex] >= g[i]) {
+      result++
+      sIndex--
+    }
+  }
+
+  return result
+}
+// const g = [1,2,3], s = [1,1]
+// const g = [1,2], s = [1,2,3]
+// console.log('findContentChilddren', findContentChildren(g, s))
+
+
+// 435. 无重叠区间 (medium)
+// https://leetcode.cn/problems/non-overlapping-intervals/
+
+// 贪心算法：
+// 思路：
+// - intervals 按右边界排序，然后从左往右遍历，右边界结束的越早，留给后面的区间的空间就越大，不重合的区间个数就越多；
+// - intervals 的长度减去最多的不重复区间，就是最少删除的区间个数
+
+// O(nlogn) 排序nlogn , 循环数组n
+// S(nlogn) 排序需要的栈空间
+
+function eraseOverlapIntervals(intervals) {
+  if(!intervals.length) return 0
+
+  // 按右边界排序， 由小到大
+  intervals.sort((a, b) => a[1] - b[1])
+
+  const len = intervals.length
+  // right 初始化，区间的右边界
+  let right = intervals[0][1]
+  // 最多的不重合区间数
+  let res = 1 
+  for(let i = 1; i < len; i++) {
+    // 循环区间数组
+    if(intervals[i][0] >= right) {
+      // 当区间的左边界大于上一个区间的右边界时，说明是一对不重合区间
+      res++
+      // 更新右边界
+      right = intervals[i][1]
+    }
+  }
+
+  // 数组长度 - 最多的不重合区间个数 = 最少需要删除的区间数
+  return len - res
+}
+
+// const intervals = [[1,2],[2,3],[3,4],[1,3]]
+const intervals = [ [1,2], [1,2], [1,2] ]
+console.log('无重叠区间', eraseOverlapIntervals(intervals));

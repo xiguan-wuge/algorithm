@@ -152,13 +152,75 @@ function coinChange(coins, amount) {
   if(f[amount] === Infinity) {
     return -1
   }
-  console.log('f', f);
+  // console.log('f', f);
   return f[amount]
   
 }
+
+function coinChange2(coins, amount) {
+  const f = []
+  f[0] = 0 // 定义边界值
+  const len = coins.length
+  for(let price = 1; price <= amount; price++) {
+    f[price] = Infinity // 初始设置无穷大，以便于可以被更小的值覆盖
+    for(let cIndex = 0; cIndex < len; cIndex++) {
+      // 目标金额大于当前硬币金额
+      if(price - coins[cIndex] >= 0) {
+        // 状态转译方程
+        f[price] = Math.min(f[price], f[price - coins[cIndex]] + 1)
+      }
+    }
+  }
+  // 目标金额不能通过硬币金额组成，返回-1
+  if(f[amount] === Infinity) return - 1
+  // 满足条件
+  return f[amount]
+}
 // 验证：
 const coins = [1, 2, 5], amount = 11
-console.log('coinChange(coins, amount)', coinChange(coins, amount))
+// console.log('coinChange(coins, amount)', coinChange2(coins, amount))
 // 假设amount为n, 硬币数为k
 // 时间复杂度O(kn)
 // 空间复杂度T(n) 数组f的长度n + len + i + j
+
+// 有 n 件物品，物品体积用一个名为 w 的数组存起来，物品的价值用一个名为 value 的数组存起来；
+// 每件物品的体积用 w[i] 来表示，每件物品的价值用 value[i] 来表示。现在有一个容量为 c 的背包，
+// 问你如何选取物品放入背包，才能使得背包内的物品总价值最大？
+
+// 注意：每种物品都只有1件
+
+// 动态规划
+// 动态方程
+// dp中保存的是是 一定物品数量和体积情况下，对应的最大物品价值
+// i: 物品数
+// v: i个物品的总体积
+// w: 数组，对应每个物品的体积
+// c: 背包容量，对应每个物品的价值
+// dp[i][v] = Math.max(dp[i-1][v], dp[i-1][v-w[i]] + c[i])
+// 对应的实现
+// let  max = 0
+// for(let i=1;i<=n;i++) {
+//   for(let v=w[i]; v<=c;v++) {
+//     dp[i][v] = Math.max(dp[i-1][v], dp[i-1][v-w[i]]+value[i])
+//     if(d[i][v] > max) max = d[i][v]
+//   }
+// }
+// return max
+
+function knapsack(n, capacity, w, value) {
+  // dp[i]: 一定容量情况下对应的最大物品价值， i是容量和
+  const dp = new Array(capacity+1).fill(0) // ? 为什么是c+1
+
+  let max = -Infinity
+  // 自变量是物品
+  for(let i = 0; i < n; i++) {
+    for(let c = capacity; c >=w[i]; c--) {
+      // 状态方程
+      dp[c] = Math.max(dp[c], dp[c-w[i]] + value[i])
+      if(dp[c] > max) max = dp[c]
+    }
+  }
+  return max
+}
+
+

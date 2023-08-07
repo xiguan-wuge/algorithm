@@ -45,17 +45,12 @@ const merge = function(num1,num2, m, n) {
 // console.log('res', JSON.stringify(res))
 
 function merge1(nums1, nums2, m, n) {
-  let len1 = m - 1,
-      len2 = n - 1,
-      len = m + n - 1
-  // 将第二个数组合并到第一个数组中
-  while(len2 >= 0) {
-    if(len1 < 0) {
-      nums1[len] = nums2[len2]
-      len--
-      len2--
-      continue
-    }
+  let len1 = nums1.length - 1,
+    len2 = nums2.length - 1,
+    len = m + n - 1
+
+  // 双指针取大值，从后往前比
+  while(len1 > -1 && len2 > -1) {
     if(nums1[len1] >= nums2[len2]) {
       nums1[len] = nums1[len1]
       len1--
@@ -65,6 +60,14 @@ function merge1(nums1, nums2, m, n) {
     }
     len--
   }
+
+  // 处理num1为空数组 或者比较后，nums2 仍不为空的情况
+  while(len2 > -1) {
+    nums1[len] = nums2[len2]
+    len2--
+    len--
+  }
+
   return nums1
 }
 const num1 = [1, 2, 3], m = 3, num2 = [2, 5, 6], n = 3
